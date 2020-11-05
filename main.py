@@ -37,19 +37,23 @@ def draw_image(img, type):
     # cv2.destroyAllWindows()
 
 
-def main():
-    rawVideo = "./FrankUnderwood.mp4"
+def main():    
     cap1 = cv2.VideoCapture("./FrankUnderwood.mp4")
     cap2 = cv2.VideoCapture("./MrRobot.mp4")
     imgs = []
     frame_cnt = 0
 
-    # Initialize video writer for tracking video
-    # trackVideo = './results/Output_' + rawVideo
-    # fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    # fps = cap.get(cv2.CAP_PROP_FPS)
-    # size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-    # writer = cv2.VideoWriter(trackVideo, fourcc, fps, size)
+    # Initialize video writer for tracking video (not working lol)
+    trackVideo1 = './results/Output_FrankUnderwood.mp4'
+    trackVideo2 = './results/Output_MrRobot.mp4'
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    fps1 = cap1.get(cv2.CAP_PROP_FPS)
+    fps2 = cap2.get(cv2.CAP_PROP_FPS)
+    size1 = (int(cap1.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap1.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+    size2 = (int(cap2.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap2.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+
+    writer1 = cv2.VideoWriter(trackVideo1, fourcc, fps1, size1)
+    writer2 = cv2.VideoWriter(trackVideo2, fourcc, fps2, size2)
 
     while (cap1.isOpened() and cap2.isOpened()):
         ret1, img1 = cap1.read()
@@ -93,17 +97,19 @@ def main():
         #     cv2.imwrite('./results/{}.jpg'.format(frame_cnt), img_as_ubyte(vis))
 
         # # Save video with bbox and all feature points
-        # writer.write(vis)
+        writer1.write(swap_1)
+        writer2.write(swap_2)
 
         # Press 'q' on the keyboard to exit
         # cv2.imshow('Track Video', img1)
         if cv2.waitKey(30) & 0xff == ord('q'): break
 
     # Release video reader and video writer
-    # cv2.destroyAllWindows()
-    # cap1.release()
-    # cap2.release()
-    # writer.release()
+    cv2.destroyAllWindows()
+    cap1.release()
+    cap2.release()
+    writer1.release()
+    writer2.release()
 
 
 if __name__ == "__main__":
