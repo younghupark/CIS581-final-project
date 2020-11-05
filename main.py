@@ -83,11 +83,11 @@ def main():
         # draw_convex_hull(hull1, img1.copy())
         # draw_convex_hull(hull2, img2.copy())
 
-        draw_delauney_triangles(triangles1, landmarks1, img1.copy())
-        draw_delauney_triangles(triangles2, landmarks2, img2.copy())
+        # draw_delauney_triangles(triangles1, landmarks1, img1.copy())
+        # draw_delauney_triangles(triangles2, landmarks2, img2.copy())
 
-        draw_image(swap_1, "Blended Swap")
-        draw_image(swap_2, "Blended Swap")
+        draw_image(swap_1, "Blended Swap 1")
+        draw_image(swap_2, "Blended Swap 2")
 
         # save to list
         # imgs.append(img_as_ubyte(vis))
