@@ -1,2 +1,4 @@
 .DS_Store
 final_demo/
+__pycache__/
+
