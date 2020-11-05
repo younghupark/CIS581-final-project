@@ -46,7 +46,7 @@ def show_face_annotated(faces, landmarks, img):
                 cv2.circle(img, (x, y), 1, (0, 0, 255), -1)
 
         # show the output image with the face detections + facial landmarks
-        cv2.imshow("Output", img)
+        cv2.imshow("Facial Landmarks", img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
