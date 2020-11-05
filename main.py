@@ -31,7 +31,7 @@ def draw_convex_hull(points, img):
     cv2.destroyAllWindows()
 
 
-def draw_affine(img):
+def draw_image(img):
     cv2.imshow("Affine transformation", img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
@@ -55,17 +55,17 @@ def main():
     img_2_face_to_img_1 = apply_affine_transformation(
         triangles2, landmarks2, landmarks1, img2, img1)
 
-    draw_delauney_triangles(triangles1, landmarks1, img1.copy())
-    draw_delauney_triangles(triangles2, landmarks2, img2.copy())
-
-    draw_affine(img_1_face_to_img_2)
-    draw_affine(img_2_face_to_img_1)
-
     swap_1 = merge_mask_with_image(landmarks2, img_1_face_to_img_2, img2)
     swap_2 = merge_mask_with_image(landmarks1, img_2_face_to_img_1, img1)
 
-    draw_affine(swap_1)
-    draw_affine(swap_2)
+    draw_delauney_triangles(triangles1, landmarks1, img1.copy())
+    draw_delauney_triangles(triangles2, landmarks2, img2.copy())
+
+    draw_image(img_1_face_to_img_2)
+    draw_image(img_2_face_to_img_1)
+
+    draw_image(swap_1)
+    draw_image(swap_2)
 
     # draw_convex_hull(hull1, img1.copy())
     # draw_convex_hull(hull2, img2.copy())
