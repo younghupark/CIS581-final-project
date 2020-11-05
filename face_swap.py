@@ -3,23 +3,7 @@
 import cv2
 import numpy as np
 
-POLY_FILL_COLOR = (1.0, 1.0, 1.0)
 
-# delauney_1 = find_delauney_triangulation(img_1, hull_1)
-# delauney_2 = find_delauney_triangulation(img_2, hull_2)
-
-
-# img_1_face_to_img_2 = apply_affine_transformation(
-#     delauney_1, hull_1, hull_2, img_1, img_2)
-# img_2_face_to_img_1 = apply_affine_transformation(
-#     delauney_2, hull_2, hull_1, img_2, img_1)
-
-# swap_1 = merge_mask_with_image(hull_2, img_1_face_to_img_2, img_2)
-# swap_2 = merge_mask_with_image(hull_1, img_2_face_to_img_1, img_1)
-
-
-# Apply affine transform calculated using srcTri and dstTri to src and
-# output an image of size.
 def get_affine_transform(src, src_tri, dst_tri, size):
     # Given a pair of triangles, find the affine transform.
     warp_mat = cv2.getAffineTransform(np.float32(src_tri), np.float32(dst_tri))
@@ -48,7 +32,7 @@ def morph_triangular_region(triangle_1, triangle_2, img_1, img_2):
 
     # get the mask by filling the triangle to mask pixels outside the desired area
     mask = np.zeros((h_2, w_2, 3))
-    cv2.fillConvexPoly(mask, np.int32(offset_triangle_2), POLY_FILL_COLOR)
+    cv2.fillConvexPoly(mask, np.int32(offset_triangle_2), (1.0, 1.0, 1.0))
 
     # get only the part of the image we are going to map within the bounding rectangle
     img_1_within_bounds = img_1[y_1:y_1 + h_1, x_1:x_1 + w_1]
