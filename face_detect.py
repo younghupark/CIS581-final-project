@@ -71,7 +71,8 @@ def detect_landmarks(img):
 
     return points
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     img1_path = './FrankUnderwood.png'
     img1 = cv2.imread(img1_path)
 
