@@ -2,6 +2,7 @@
 
 import cv2
 import numpy as np
+POLY_FILL_COLOR = (1.0, 1.0, 1.0)
 
 
 def get_affine_transform(src, src_tri, dst_tri, size):
@@ -100,9 +101,9 @@ def calculate_mask(landmarks, img):
     # this fills only the area of the hull
     cv2.fillConvexPoly(mask, np.int32(hull_tuples), (255, 255, 255))
 
-    cv2.imshow("Image Mask ", mask)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow("Image Mask ", mask)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     hull_bounding_rectangle = cv2.boundingRect(np.float32([hull]))
 
