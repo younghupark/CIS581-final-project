@@ -16,8 +16,8 @@ def draw_delauney_triangles(triangles, landmarks, img):
         cv2.line(img, v3, v1, (255, 255, 255), 1, cv2.LINE_AA, 0)
 
     cv2.imshow("Delauney Triangulation", img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
 
 def draw_convex_hull(points, img):
@@ -27,45 +27,83 @@ def draw_convex_hull(points, img):
         cv2.circle(img, (x, y), 1, (0, 0, 255), -1)
 
     cv2.imshow("Convex Hull", img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
 
 def draw_image(img, type):
     cv2.imshow(type, img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
 
 def main():
-    img1 = cv2.imread('./FrankUnderwood.png')
-    img2 = cv2.imread('./MrRobot.png')
+    rawVideo = "./FrankUnderwood.mp4"
+    cap1 = cv2.VideoCapture("./FrankUnderwood.mp4")
+    cap2 = cv2.VideoCapture("./MrRobot.mp4")
+    imgs = []
+    frame_cnt = 0
 
-    landmarks1 = detect_landmarks(img1.copy())[0]
-    landmarks2 = detect_landmarks(img2.copy())[0]
+    # Initialize video writer for tracking video
+    # trackVideo = './results/Output_' + rawVideo
+    # fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    # fps = cap.get(cv2.CAP_PROP_FPS)
+    # size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+    # writer = cv2.VideoWriter(trackVideo, fourcc, fps, size)
 
-    hull1 = cv2.convexHull(landmarks1)
-    hull2 = cv2.convexHull(landmarks2)
+    while (cap1.isOpened() and cap2.isOpened()):
+        ret1, img1 = cap1.read()
+        ret2, img2 = cap2.read()
+        if not ret1 or not ret2: continue
+        frame_cnt += 1
+        print(frame_cnt)
 
-    triangles1 = delauney_triangulation(landmarks1)
-    triangles2 = delauney_triangulation(landmarks2)
+        # returns (x,y) points for the landmarks
+        landmarks1 = detect_landmarks(img1.copy())[0]
+        landmarks2 = detect_landmarks(img2.copy())[0]
 
-    img_1_face_to_img_2 = apply_affine_transformation(
-        triangles1, landmarks1, landmarks2, img1, img2)
-    img_2_face_to_img_1 = apply_affine_transformation(
-        triangles2, landmarks2, landmarks1, img2, img1)
+        hull1 = cv2.convexHull(landmarks1)
+        hull2 = cv2.convexHull(landmarks2)
 
-    swap_1 = merge_mask_with_image(landmarks2, img_1_face_to_img_2, img2)
-    swap_2 = merge_mask_with_image(landmarks1, img_2_face_to_img_1, img1)
+        triangles1 = delauney_triangulation(landmarks1)
+        triangles2 = delauney_triangulation(landmarks2)
 
-    # draw_convex_hull(hull1, img1.copy())
-    # draw_convex_hull(hull2, img2.copy())
+        img_1_face_to_img_2 = apply_affine_transformation(
+            triangles1, landmarks1, landmarks2, img1, img2)
+        img_2_face_to_img_1 = apply_affine_transformation(
+            triangles2, landmarks2, landmarks1, img2, img1)
 
-    draw_delauney_triangles(triangles1, landmarks1, img1.copy())
-    draw_delauney_triangles(triangles2, landmarks2, img2.copy())
+        swap_1 = merge_mask_with_image(landmarks2, img_1_face_to_img_2, img2)
+        swap_2 = merge_mask_with_image(landmarks1, img_2_face_to_img_1, img1)
 
-    draw_image(swap_1, "Blended Swap")
-    draw_image(swap_2, "Blended Swap")
+        # draw_convex_hull(hull1, img1.copy())
+        # draw_convex_hull(hull2, img2.copy())
+
+        draw_delauney_triangles(triangles1, landmarks1, img1.copy())
+        draw_delauney_triangles(triangles2, landmarks2, img2.copy())
+
+        draw_image(swap_1, "Blended Swap")
+        draw_image(swap_2, "Blended Swap")
+
+        # save to list
+        # imgs.append(img_as_ubyte(vis))
+
+        # # save image
+        # if (frame_cnt + 1) % 10 == 0:
+        #     cv2.imwrite('./results/{}.jpg'.format(frame_cnt), img_as_ubyte(vis))
+
+        # # Save video with bbox and all feature points
+        # writer.write(vis)
+
+        # Press 'q' on the keyboard to exit
+        # cv2.imshow('Track Video', img1)
+        if cv2.waitKey(30) & 0xff == ord('q'): break
+
+    # Release video reader and video writer
+    # cv2.destroyAllWindows()
+    # cap1.release()
+    # cap2.release()
+    # writer.release()
 
 
 if __name__ == "__main__":

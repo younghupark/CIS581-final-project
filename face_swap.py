@@ -1,5 +1,3 @@
-
-
 import cv2
 import numpy as np
 POLY_FILL_COLOR = (1.0, 1.0, 1.0)

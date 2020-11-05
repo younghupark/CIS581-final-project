@@ -81,39 +81,3 @@ if __name__=="__main__":
     cap = cv2.VideoCapture(rawVideo)
     imgs = []
     frame_cnt = 0
-
-    # Initialize video writer for tracking video
-    trackVideo = './results/Output_' + rawVideo
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-    writer = cv2.VideoWriter(trackVideo, fourcc, fps, size)
-
-    while (cap.isOpened()):
-        ret, frame = cap.read()
-        if not ret: continue
-        vis = frame.copy()
-        frame_cnt += 1
-
-        # returns (x,y) points for the landmarks
-        points = detect_landmarks(vis)
-        print(frame_cnt)
-
-        # save to list
-        imgs.append(img_as_ubyte(vis))
-
-        # save image
-        if (frame_cnt + 1) % 10 == 0:
-            cv2.imwrite('./results/{}.jpg'.format(frame_cnt), img_as_ubyte(vis))
-
-        # Save video with bbox and all feature points
-        writer.write(vis)
-
-        # Press 'q' on the keyboard to exit
-        cv2.imshow('Track Video', vis)
-        if cv2.waitKey(30) & 0xff == ord('q'): break
-
-    # Release video reader and video writer
-    cv2.destroyAllWindows()
-    cap.release()
-    writer.release()
