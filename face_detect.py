@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import dlib
-from skimage import img_as_ubyte
+#from skimage import img_as_ubyte
 
 # Pre-trained shape predictor from iBUG 300-W dataset
 SHAPE_PREDICTOR = './shape_predictor_68_face_landmarks.dat'

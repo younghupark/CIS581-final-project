@@ -49,15 +49,14 @@ def main():
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     fps1 = cap1.get(cv2.CAP_PROP_FPS)
     fps2 = cap2.get(cv2.CAP_PROP_FPS)
-    size1 = (int(cap1.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap1.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-    size2 = (int(cap2.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap2.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-
-    writer1 = cv2.VideoWriter(trackVideo1, fourcc, fps1, size1)
-    writer2 = cv2.VideoWriter(trackVideo2, fourcc, fps2, size2)
+    size = (1280, 720)
+    writer1 = cv2.VideoWriter(trackVideo1, fourcc, fps1, size)
+    writer2 = cv2.VideoWriter(trackVideo2, fourcc, fps2, size)
 
     while (cap1.isOpened() and cap2.isOpened()):
         ret1, img1 = cap1.read()
         ret2, img2 = cap2.read()
+        img2 = cv2.resize(img2, (1280, 720))
         if not ret1 or not ret2: continue
         frame_cnt += 1
         print(frame_cnt)
