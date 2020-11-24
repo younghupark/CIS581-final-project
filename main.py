@@ -56,10 +56,10 @@ def main():
     while (cap1.isOpened() and cap2.isOpened()):
         ret1, img1 = cap1.read()
         ret2, img2 = cap2.read()
-        img2 = cv2.resize(img2, (1280, 720))
-        if not ret1 or not ret2: continue
+        if not ret1 or not ret2: break
         frame_cnt += 1
         print(frame_cnt)
+        img2 = cv2.resize(img2, (1280, 720))
 
         # returns (x,y) points for the landmarks
         landmarks1 = detect_landmarks(img1.copy())[0]
