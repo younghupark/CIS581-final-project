@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 import dlib
-#from skimage import img_as_ubyte
 
 # Pre-trained shape predictor from iBUG 300-W dataset
 SHAPE_PREDICTOR = './shape_predictor_68_face_landmarks.dat'
@@ -71,13 +70,3 @@ def detect_landmarks(img):
     show_face_annotated(detected_faces, points, img)
 
     return points
-
-if __name__=="__main__":
-    # img1_path = './FrankUnderwood.png'
-    # img1 = cv2.imread(img1_path)
-    #img2 = './MrRobot.png'
-
-    rawVideo = "./FrankUnderwood.mp4"
-    cap = cv2.VideoCapture(rawVideo)
-    imgs = []
-    frame_cnt = 0
