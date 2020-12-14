@@ -76,9 +76,8 @@ def apply_affine_transformation(delauney, hull_1, hull_2, img_1, img_2):
 
     return img_2_with_face_1
 
-    # get the area that was transformed in order to seamlessly clone
 
-
+# Get the area that was transformed in order to seamlessly clone
 def calculate_mask(landmarks, img):
     hull_tuples = []
 
@@ -109,12 +108,41 @@ def calculate_mask(landmarks, img):
                                  hull_bounding_rectangle[1] + int(hull_bounding_rectangle[3] / 2))
 
     # return the mask of the face area and the center of the bounding bounding box which contains the face
-
     return mask, bounding_rectangle_center
 
 
-# this function takes in an image with a mapped face and smooths the mask to look more natural
-def merge_mask_with_image(hull, img_with_mapped_face, original_img):
-    mask, center = calculate_mask(hull, original_img)
-    # use seamless clone to make sure the swapped face mask looks right
+# Smooths and blends the mask to look more natural
+def merge_mask_with_image(landmarks, img_with_mapped_face, original_img):
+    mask, center = calculate_mask(landmarks, original_img)
+
+    # make the mask smaller 
+    kernel = np.ones((20, 20), np.uint8)
+    mask = cv2.erode(mask, kernel, iterations = 2)
+
+    # poisson blending to smooth out the edges
     return cv2.seamlessClone(np.uint8(img_with_mapped_face), original_img, mask, center, cv2.NORMAL_CLONE)
+
+
+# Color Correction
+def correct_colors(im1, im2, landmarks1):
+    COLOUR_CORRECT_BLUR_FRAC = 0.75
+    LEFT_EYE_POINTS = list(range(42, 48))
+    RIGHT_EYE_POINTS = list(range(36, 42))
+
+    blur_amount = COLOUR_CORRECT_BLUR_FRAC * np.linalg.norm(
+                              np.mean(landmarks1[LEFT_EYE_POINTS], axis=0) -
+                              np.mean(landmarks1[RIGHT_EYE_POINTS], axis=0))
+    blur_amount = int(blur_amount)
+    if blur_amount % 2 == 0:
+        blur_amount += 1
+    im1_blur = cv2.GaussianBlur(im1, (blur_amount, blur_amount), 0)
+    im2_blur = cv2.GaussianBlur(im2, (blur_amount, blur_amount), 0)
+
+    # Avoid divide-by-zero errors.
+    im2_blur = im2_blur.astype(int)
+    im2_blur += 128*(im2_blur <= 1)
+
+    result = im2.astype(np.float64) * im1_blur.astype(np.float64) / im2_blur.astype(np.float64)
+    result = np.clip(result, 0, 255).astype(np.uint8)
+
+    return result

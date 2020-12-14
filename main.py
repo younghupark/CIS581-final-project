@@ -1,47 +1,14 @@
 from face_detect import *
 from feature_extraction import *
 from face_swap import *
-import cv2
 from cartoonize import *
 
-
-def draw_delauney_triangles(triangles, landmarks, img):
-    for i, j, k in triangles:
-
-        v1 = tuple(landmarks[i])
-        v2 = tuple(landmarks[j])
-        v3 = tuple(landmarks[k])
-
-        cv2.line(img, v1, v2, (255, 255, 255), 1, cv2.LINE_AA, 0)
-        cv2.line(img, v2, v3, (255, 255, 255), 1, cv2.LINE_AA, 0)
-        cv2.line(img, v3, v1, (255, 255, 255), 1, cv2.LINE_AA, 0)
-
-    cv2.imshow("Delauney Triangulation", img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-
-
-def draw_convex_hull(points, img):
-    for point in points:
-        x = point[0][0]
-        y = point[0][1]
-        cv2.circle(img, (x, y), 1, (0, 0, 255), -1)
-
-    cv2.imshow("Convex Hull", img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-
-
-def draw_image(img, type):
-    cv2.imshow(type, img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-
+import cv2
+import numpy as np
 
 def main():    
     cap1 = cv2.VideoCapture("./FrankUnderwood.mp4")
     cap2 = cv2.VideoCapture("./MrRobot.mp4")
-    imgs = []
     frame_cnt = 0
 
     # Initialize video writer for tracking video (not working lol)
@@ -63,49 +30,39 @@ def main():
         img2 = cv2.resize(img2, (1280, 720))
 
         # testing cartoon. comment this out to go back to normal mode
-        img2 = make_cartoon(img2)
-        img1 = make_cartoon(img1)
+        # img2 = make_cartoon(img2)
+        # img1 = make_cartoon(img1)
 
-        # returns (x,y) points for the landmarks
+        # extract landmark points (x, y)
         landmarks1 = detect_landmarks(img1.copy())[0]
         landmarks2 = detect_landmarks(img2.copy())[0]
 
-        hull1 = cv2.convexHull(landmarks1)
-        hull2 = cv2.convexHull(landmarks2)
-
+        # create delauney triangles
         triangles1 = delauney_triangulation(landmarks1)
         triangles2 = delauney_triangulation(landmarks2)
 
+        # transform face frrom source to destinattion
         img_1_face_to_img_2 = apply_affine_transformation(
             triangles1, landmarks1, landmarks2, img1, img2)
         img_2_face_to_img_1 = apply_affine_transformation(
             triangles2, landmarks2, landmarks1, img2, img1)
 
+        # apply color correction
+        img_1_face_to_img_2 = correct_colors(img2, img_1_face_to_img_2, landmarks1)
+        img_2_face_to_img_1 = correct_colors(img1, img_2_face_to_img_1, landmarks2)
+
+        # apply face swap
         swap_1 = merge_mask_with_image(landmarks2, img_1_face_to_img_2, img2)
         swap_2 = merge_mask_with_image(landmarks1, img_2_face_to_img_1, img1)
 
-        # draw_convex_hull(hull1, img1.copy())
-        # draw_convex_hull(hull2, img2.copy())
-
-        # draw_delauney_triangles(triangles1, landmarks1, img1.copy())
-        # draw_delauney_triangles(triangles2, landmarks2, img2.copy())
-
-        draw_image(swap_1, "Blended Swap 1")
-        draw_image(swap_2, "Blended Swap 2")
-
-        # save to list
-        # imgs.append(img_as_ubyte(vis))
-
-        # # save image
-        # if (frame_cnt + 1) % 10 == 0:
-        #     cv2.imwrite('./results/{}.jpg'.format(frame_cnt), img_as_ubyte(vis))
+        cv2.imshow("Blended Swap 1", swap_1)
+        cv2.imshow("Blended Swap 2", swap_2)
 
         # # Save video with bbox and all feature points
         writer1.write(swap_1)
         writer2.write(swap_2)
 
         # Press 'q' on the keyboard to exit
-        # cv2.imshow('Track Video', img1)
         if cv2.waitKey(30) & 0xff == ord('q'): break
 
     # Release video reader and video writer
