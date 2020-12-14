@@ -58,3 +58,11 @@ def draw_convex_hull(points, img):
     cv2.imshow("Convex Hull", img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+def convex_hull(points1, points2):
+    hullIndex = cv2.convexHull(np.array(points2).astype(np.int32), returnPoints=False)
+
+    hull1 = [points1[int(hullIndex[i])] for i in range(0,len(hullIndex))]
+    hull2 = [points2[int(hullIndex[i])] for i in range(0, len(hullIndex))]
+
+    return hull1, hull2
