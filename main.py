@@ -33,6 +33,10 @@ def main():
         # img2 = make_cartoon(img2)
         # img1 = make_cartoon(img1)
 
+        # cartoonize_version 2 - slightly better color
+        # img1 = cartoonize(img1)
+        # img2 = cartoonize(img2)
+
         # extract landmark points (x, y)
         landmarks1 = detect_landmarks(img1.copy())[0]
         landmarks2 = detect_landmarks(img2.copy())[0]
