@@ -2,6 +2,7 @@ from face_detect import *
 from feature_extraction import *
 from face_swap import *
 from cartoonize import *
+from cartoonize_2 import *
 
 import cv2
 import numpy as np
@@ -34,8 +35,8 @@ def main():
         # img1 = make_cartoon(img1)
 
         # cartoonize_version 2 - slightly better color
-        # img1 = cartoonize(img1)
-        # img2 = cartoonize(img2)
+        img1 = cartoonize(img1)
+        img2 = cartoonize(img2)
 
         # extract landmark points (x, y)
         landmarks1 = detect_landmarks(img1.copy())[0]
