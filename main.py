@@ -3,6 +3,7 @@ from feature_extraction import *
 from face_swap import *
 from cartoonize import *
 from optical_flow import *
+from cartoonize_2 import *
 
 import cv2
 import numpy as np
@@ -42,6 +43,10 @@ def main():
                     # testing cartoon. comment this out to go back to normal mode
                     # img2 = make_cartoon(img2)
                     # img1 = make_cartoon(img1)
+                  
+                    # cartoonize_version 2 - slightly better color
+                    img1 = cartoonize(img1)
+                    img2 = cartoonize(img2)
 
                     # extract landmark points (x, y)
                     landmarks1 = detect_landmarks(img1.copy())[0]
@@ -87,7 +92,6 @@ def main():
                     prev_target_frame = img2
                     prev_target_frame_2 = img1
 
-    
         # Press 'q' on the keyboard to exit
         if cv2.waitKey(30) & 0xff == ord('q'): break
 
