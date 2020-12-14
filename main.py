@@ -2,6 +2,7 @@ from face_detect import *
 from feature_extraction import *
 from face_swap import *
 import cv2
+from cartoonize import *
 
 
 def draw_delauney_triangles(triangles, landmarks, img):
@@ -60,6 +61,10 @@ def main():
         frame_cnt += 1
         print(frame_cnt)
         img2 = cv2.resize(img2, (1280, 720))
+
+        # testing cartoon. comment this out to go back to normal mode
+        img2 = make_cartoon(img2)
+        img1 = make_cartoon(img1)
 
         # returns (x,y) points for the landmarks
         landmarks1 = detect_landmarks(img1.copy())[0]
