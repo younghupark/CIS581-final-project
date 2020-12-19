@@ -9,23 +9,24 @@ import cv2
 import numpy as np
 
 def main():    
-    cap1 = cv2.VideoCapture("./FrankUnderwood.mp4")
-    cap2 = cv2.VideoCapture("./MrRobot.mp4")
+    cap1 = cv2.VideoCapture("./videos/FrankUnderwood.mp4")
+    cap2 = cv2.VideoCapture("./videos/MrRobot.mp4")
     frame_cnt = 0
-    FRAME_RATE = 5
 
-    # Initialize video writer for tracking video (not working lol)
-    trackVideo1 = './results/Output_FrankUnderwood.mp4'
-    trackVideo2 = './results/Output_MrRobot.mp4'
+    # change the frame rate to 1 if not want to apply Optical Flow
+    FRAME_RATE = 1
+    # change this to 0 to not cartoonize or 1 to cartoonize
+    CARTOONIZE = 1
+
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     fps1 = cap1.get(cv2.CAP_PROP_FPS)
     fps2 = cap2.get(cv2.CAP_PROP_FPS)
     size = (1280, 720)
-    writer1 = cv2.VideoWriter(trackVideo1, fourcc, fps1, size)
-    writer2 = cv2.VideoWriter(trackVideo2, fourcc, fps2, size)
 
-    out = cv2.VideoWriter('./results/optical_flow_output1.mp4', fourcc, fps2, size)
-    out2 = cv2.VideoWriter('./results/optical_flow_output2.mp4', fourcc, fps2, size)
+    out = cv2.VideoWriter('./results/cartoonize_of_output.mp4', fourcc, fps2, size)
+    out2 = cv2.VideoWriter('./results/cartoonize_of_output2.mp4', fourcc, fps2, size)
+
+    
 
     while (cap1.isOpened() and cap2.isOpened()):
         ret1, img1 = cap1.read()
@@ -41,12 +42,10 @@ def main():
                     # direct face swapping
 
                     # testing cartoon. comment this out to go back to normal mode
-                    # img2 = make_cartoon(img2)
-                    # img1 = make_cartoon(img1)
+                    if CARTOONIZE:
+                        img2 = cartoonize(img2)
+                        img1 = cartoonize(img1)
                   
-                    # cartoonize_version 2 - slightly better color
-                    img1 = cartoonize(img1)
-                    img2 = cartoonize(img2)
 
                     # extract landmark points (x, y)
                     landmarks1 = detect_landmarks(img1.copy())[0]
@@ -84,9 +83,15 @@ def main():
                     prev_target_frame = img2
                     prev_target_frame_2 = img1
                 else:
+                    
                     # apply optical flows for the rest of 4 frames
                     output, landmarks2 = get_optical_flow(output, landmarks2, img2, prev_target_frame, pos_frame)
                     output2, landmarks1 = get_optical_flow(output2, landmarks1, img1, prev_target_frame_2, pos_frame)
+                    
+                    if CARTOONIZE:
+                        output2 = cartoonize(output2)
+                        output = cartoonize(output)
+
                     out.write(output)
                     out2.write(output2)
                     prev_target_frame = img2
