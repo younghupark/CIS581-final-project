@@ -49,7 +49,7 @@ def transform_image(points1, points2, img1, img2, frame_no):
 	hull2 = np.asarray(hull2)
 	hull2[:, 0] = np.clip(hull2[:, 0], 0, img2.shape[1] - 1)
 	hull2[:, 1] = np.clip(hull2[:, 1], 0, img2.shape[0] - 1)
-	hull2 = listOfListToTuples(hull2.astype(np.float32).tolist())
+	hull2 = tuplify(hull2.astype(np.float32).tolist())
 
 	dt = triangulation(img2, hull2)
 	if len(dt) == 0:
