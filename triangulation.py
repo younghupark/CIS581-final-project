@@ -16,14 +16,12 @@ def calculateDelaunayTriangles_spatial(rect, points, img):
 	Tri = spatial.Delaunay(points)
 	triangles = Tri.simplices
 
-	return listOfListToTuples(triangles.tolist())
+	return tuplify(triangles.tolist())
 
-def listOfListToTuples(p):
+def tuplify(p):
 	t_list = []
 	for ent in p:
-		s = []
-		for i in range(0, len(ent)):
-			s.append(ent[i])
+		s = [ent[i] for i in range(len(ent))]
 		t_list.append(tuple(s))
 
 	return t_list

@@ -85,8 +85,8 @@ def main():
                     prev_target_frame_2 = img1
                 else:
                     # apply optical flows for the rest of 4 frames
-                    output, landmarks2 = doOpticalFlow(output, landmarks2, img2, prev_target_frame, pos_frame)
-                    output2, landmarks1 = doOpticalFlow(output2, landmarks1, img1, prev_target_frame_2, pos_frame)
+                    output, landmarks2 = get_optical_flow(output, landmarks2, img2, prev_target_frame, pos_frame)
+                    output2, landmarks1 = get_optical_flow(output2, landmarks1, img1, prev_target_frame_2, pos_frame)
                     out.write(output)
                     out2.write(output2)
                     prev_target_frame = img2
