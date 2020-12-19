@@ -115,9 +115,9 @@ def calculate_mask(landmarks, img):
 def merge_mask_with_image(landmarks, img_with_mapped_face, original_img):
     mask, center = calculate_mask(landmarks, original_img)
 
-    # make the mask smaller 
-    kernel = np.ones((20, 20), np.uint8)
-    mask = cv2.erode(mask, kernel, iterations = 2)
+    # make the mask smaller
+    # kernel = np.ones((20, 20), np.uint8)
+    # mask = cv2.erode(mask, kernel, iterations = 2)
 
     # poisson blending to smooth out the edges
     return cv2.seamlessClone(np.uint8(img_with_mapped_face), original_img, mask, center, cv2.NORMAL_CLONE)
@@ -130,8 +130,8 @@ def correct_colors(im1, im2, landmarks1):
     RIGHT_EYE_POINTS = list(range(36, 42))
 
     blur_amount = COLOUR_CORRECT_BLUR_FRAC * np.linalg.norm(
-                              np.mean(landmarks1[LEFT_EYE_POINTS], axis=0) -
-                              np.mean(landmarks1[RIGHT_EYE_POINTS], axis=0))
+        np.mean(landmarks1[LEFT_EYE_POINTS], axis=0) -
+        np.mean(landmarks1[RIGHT_EYE_POINTS], axis=0))
     blur_amount = int(blur_amount)
     if blur_amount % 2 == 0:
         blur_amount += 1
@@ -142,7 +142,8 @@ def correct_colors(im1, im2, landmarks1):
     im2_blur = im2_blur.astype(int)
     im2_blur += 128*(im2_blur <= 1)
 
-    result = im2.astype(np.float64) * im1_blur.astype(np.float64) / im2_blur.astype(np.float64)
+    result = im2.astype(np.float64) * \
+        im1_blur.astype(np.float64) / im2_blur.astype(np.float64)
     result = np.clip(result, 0, 255).astype(np.uint8)
 
     return result
