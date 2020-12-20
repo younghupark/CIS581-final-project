@@ -1,10 +1,11 @@
-# This is the final project for CIS581 Fall 2020 done by Group 25. 
+# CIS581 Fall 2020 Final Project
+### Group 25 - Abigail Lee, James Hu, Kenny Hoang,  Krystal Jinlu Ma, Younghu Park, Zach Li
 
-### There are some required libraries to execute this program.
-Below is the steps to set up the environment.
-Here we are assuming you are working on macOS. 
+### Required Libraries
+* numpy
+* scipy
+* opencv-python (cv2)
+* dlib
+* scikit-image
 
-* conda create --name cis581 python=3
-* conda activate cis581
-* (cis581) pip3 install opencv-python
-* (cis581) conda install -c menpo dlib
+Replace the video and output paths in [main.py](main.py), then simply run main.py
