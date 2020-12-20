@@ -9,3 +9,7 @@
 * scikit-image
 
 Replace the video and output paths in [main.py](main.py), then simply run main.py
+
+# Deep Learning Repositories
+https://github.com/deepfakes/faceswap
+https://github.com/iperov/DeepFaceLab
